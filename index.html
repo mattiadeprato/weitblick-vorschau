@@ -999,6 +999,12 @@ body{font-family:var(--text)}
 }
 @media (prefers-reduced-motion:reduce){.blatt,.eselsohr{transition:none}}
 
+/* Fassung 23: die ganze Seite ist greifbar */
+@media (min-width:1024px) and (min-height:560px){
+  .pass.offen .blatt .visaseite,.pass.offen .blatt-rueck{cursor:grab;user-select:none;-webkit-user-select:none}
+  .pass.blatt-zieht,.pass.blatt-zieht *{cursor:grabbing!important}
+}
+
 /* Seiten von rechts */
 .schleier{position:fixed;inset:0;z-index:40;background:rgba(4,4,10,.55);opacity:0;transition:opacity .45s ease}
 .schleier.an{opacity:1}
@@ -1138,7 +1144,7 @@ body{font-family:var(--text)}
     </div>
   </div>
   <footer class="start-fuss">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 22 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 23 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </section>
 
@@ -1215,7 +1221,7 @@ body{font-family:var(--text)}
   </div>
 
   <footer class="wrap leiste">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 22 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 23 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </div>
 
@@ -1672,25 +1678,31 @@ function deckelSetze(p){ deckelEl.style.transform = "translateZ(" + (3 * (1 - p)
     if(auf) passAuf(); else passZu();
     setTimeout(function(){ deckelGezogen = false; }, 650); }
   griff.addEventListener("pointerup", los); griff.addEventListener("pointercancel", los); });
-/* Weiterblättern: Die Visa-Seite ist ein Blatt. Eselsohr unten rechts klicken oder nach links ziehen, auf Seite 4 zurück. */
-const blattEl = document.getElementById("blatt"); let blattZug = null, blattGezogen = false, blattTimer = 0;
+/* Weiterblättern: Die Visa-Seite ist ein Blatt. Überall auf der Seite greifen und nach links ziehen blättert um,
+   auf Seite 4 nach rechts zurück. Ein Klick ohne Ziehen bleibt ein Klick (Stempel, Links, Eselsohr).
+   Bewegungen kommen vom ganzen Fenster, damit schnelle Züge nicht verloren gehen; nach einem Zug wird der Klick geschluckt. */
+const blattEl = document.getElementById("blatt"); let blattZug = null, blattTimer = 0, klickSchlucken = false;
 function blaettern(an){ passEl.classList.add("blatt-los"); clearTimeout(blattTimer); blattTimer = setTimeout(function(){ passEl.classList.remove("blatt-los"); }, 650);
   passEl.classList.toggle("blaettert", an);
   const ziel = passEl.querySelector(an ? ".eselsohr.zurueck" : ".eselsohr.weiter"); if(ziel && document.activeElement && document.activeElement.closest && document.activeElement.closest(".eselsohr")) setTimeout(function(){ ziel.focus({ preventScroll:true }); }, 300); }
-if(blattEl) passEl.querySelectorAll(".eselsohr").forEach(function(ohr){
-  ohr.addEventListener("click", function(e){ e.stopPropagation(); if(blattGezogen){ blattGezogen = false; return; } blaettern(!passEl.classList.contains("blaettert")); });
-  ohr.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || e.button > 0) return; e.stopPropagation();
-    blattZug = { id:e.pointerId, x:e.clientX, t:performance.now(), v:0, p:null, p0:passEl.classList.contains("blaettert") ? 1 : 0, w:passEl.offsetWidth / 2 }; blattGezogen = false;
-    try{ ohr.setPointerCapture(e.pointerId); }catch(x){} });
-  ohr.addEventListener("pointermove", function(e){ if(!blattZug || e.pointerId !== blattZug.id) return; const dx = e.clientX - blattZug.x;
-    if(!blattGezogen){ if(Math.abs(dx) < 6) return; blattGezogen = true; try{ ohr.setPointerCapture(e.pointerId); }catch(x){} passEl.classList.add("blatt-zieht"); }
-    const now = performance.now(), p = Math.max(0, Math.min(1, blattZug.p0 - dx / (blattZug.w * 1.6)));
-    if(blattZug.p !== null) blattZug.v = (p - blattZug.p) / Math.max(1, now - blattZug.t); blattZug.p = p; blattZug.t = now;
-    blattEl.style.transform = "translateZ(" + (1 + p).toFixed(2) + "px) rotateY(" + (-180 * p).toFixed(1) + "deg)"; });
-  function blattLos(e){ if(!blattZug || e.pointerId !== blattZug.id) return; const z = blattZug; blattZug = null; if(!blattGezogen) return;
-    const p = z.p === null ? z.p0 : z.p, an = Math.abs(z.v) > .0015 ? z.v > 0 : p > .5;
-    passEl.classList.remove("blatt-zieht"); blattEl.style.transform = ""; blaettern(an); setTimeout(function(){ blattGezogen = false; }, 650); }
-  ohr.addEventListener("pointerup", blattLos); ohr.addEventListener("pointercancel", blattLos); });
+passEl.addEventListener("click", function(e){ if(klickSchlucken){ klickSchlucken = false; e.stopPropagation(); e.preventDefault(); } }, true);
+passEl.querySelectorAll(".eselsohr").forEach(function(ohr){ ohr.addEventListener("click", function(e){ e.stopPropagation(); blaettern(!passEl.classList.contains("blaettert")); }); });
+function blattBewegt(e){ const z = blattZug; if(!z || e.pointerId !== z.id) return; const dx = e.clientX - z.x, dy = e.clientY - z.y;
+  if(!z.zieht){ if(Math.abs(dx) < 6 && Math.abs(dy) < 6) return; if(Math.abs(dy) > Math.abs(dx)){ blattEnde(); return; } z.zieht = true; passEl.classList.add("blatt-zieht"); }
+  e.preventDefault(); const now = performance.now(), p = Math.max(0, Math.min(1, z.p0 - dx / (z.w * 1.6)));
+  if(z.p !== null) z.v = (p - z.p) / Math.max(1, now - z.t); z.p = p; z.t = now;
+  blattEl.style.transform = "translateZ(" + (1 + p).toFixed(2) + "px) rotateY(" + (-180 * p).toFixed(1) + "deg)"; }
+function blattEnde(){ removeEventListener("pointermove", blattBewegt); removeEventListener("pointerup", blattLos); removeEventListener("pointercancel", blattLos); blattZug = null; }
+function blattLos(e){ const z = blattZug; if(!z || e.pointerId !== z.id) return; blattEnde(); if(!z.zieht) return;
+  const p = z.p === null ? z.p0 : z.p, an = Math.abs(z.v) > .0015 ? z.v > 0 : p > .5;
+  passEl.classList.remove("blatt-zieht"); blattEl.style.transform = ""; blaettern(an);
+  klickSchlucken = true; setTimeout(function(){ klickSchlucken = false; }, 400); }
+if(blattEl) [passEl.querySelector(".visaseite"), passEl.querySelector(".blatt-rueck")].forEach(function(seite){ if(!seite) return;
+  seite.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || !startAn || e.button > 0 || blattZug) return;
+    if(e.target.closest(".zuklappen, a, input, textarea")) return;
+    const hinten = seite.classList.contains("blatt-rueck"); if(hinten !== passEl.classList.contains("blaettert")) return;
+    blattZug = { id:e.pointerId, x:e.clientX, y:e.clientY, t:performance.now(), v:0, p:null, p0:hinten ? 1 : 0, w:passEl.offsetWidth / 2, zieht:false };
+    addEventListener("pointermove", blattBewegt, { passive:false }); addEventListener("pointerup", blattLos); addEventListener("pointercancel", blattLos); }); });
 function stempeln(id, el, ohneFlug){ if(stempelt || !startAn) return; stempelt = true;
   const r = el.getBoundingClientRect(), sx = r.left + r.width / 2, sy = r.top + r.height / 2, schmal = stapel.matches;
   if(!ohneFlug && !ruhig && !schmal && werkzeug && werkzeug.animate){ const w = werkzeug.getBoundingClientRect(), dx = sx - (w.left + w.width / 2), dy = sy - (w.top + w.height * .9);
