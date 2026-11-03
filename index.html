@@ -1047,6 +1047,21 @@ html.hand-an,html.hand-an *{cursor:none!important}
 .hand{filter:none}
 @media (min-width:1024px) and (min-height:560px){.visaseite,.blatt-rueck,.seite-fuenf,.deckel-innen{contain:paint}}
 
+/* Fassung 31: Deckel und Blatt klappen flach um den Falz (scaleX), ohne 3D – zuverlässig in jedem Browser */
+@media (min-width:1024px) and (min-height:560px){
+  .pass,.deckel,.blatt{transform-style:flat}
+  .deckel{transform:scaleX(1);z-index:1}
+  .pass:not(.offen) .deckel,.pass.deckel-zieht .deckel{z-index:3}
+  .pass:not(.offen):hover .deckel{transform:scaleX(.95)}
+  .pass.offen .deckel{transform:scaleX(-1)}
+  .deckel-innen{transform:scaleX(-1)}
+  .blatt{transform:scaleX(1);z-index:2}
+  .pass.blaettert .blatt{transform:scaleX(-1)}
+  .blatt-rueck{transform:scaleX(-1)}
+  .deckel::after,.blatt::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;border-radius:inherit;opacity:var(--falz,0);
+    background:linear-gradient(90deg,rgba(35,22,8,.34),rgba(35,22,8,.08) 45%,rgba(255,250,235,.12) 85%,rgba(35,22,8,.2))}
+}
+
 /* Seiten von rechts */
 .schleier{position:fixed;inset:0;z-index:40;background:rgba(4,4,10,.55);opacity:0;transition:opacity .45s ease}
 .schleier.an{opacity:1}
@@ -1187,7 +1202,7 @@ html.hand-an,html.hand-an *{cursor:none!important}
     </div>
   </div>
   <footer class="start-fuss">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 30 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 31 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </section>
 
@@ -1265,7 +1280,7 @@ html.hand-an,html.hand-an *{cursor:none!important}
   </div>
 
   <footer class="wrap leiste">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 30 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 31 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </div>
 
@@ -1707,7 +1722,7 @@ function passZu(){ if(!passEl.classList.contains("offen")) return; deckelLos(); 
 const deckelEl = passEl.querySelector(".deckel"); let deckelZug = null, deckelGezogen = false;
 passEl.querySelector(".deckel-vorne").addEventListener("click", function(){ if(deckelGezogen){ deckelGezogen = false; return; } passAuf(); });
 passEl.querySelectorAll(".zuklappen").forEach(function(zuKnopf){ zuKnopf.addEventListener("click", function(e){ e.stopPropagation(); passZu(); const v = passEl.querySelector(".deckel-vorne"); if(v) setTimeout(function(){ v.focus({ preventScroll:true }); }, 50); }); });
-function deckelSetze(p){ passEl.classList.toggle("deckel-hinten", p > .5); deckelEl.style.transform = "translateZ(" + (3 * (1 - p)).toFixed(2) + "px) rotateY(" + (-180 * p).toFixed(1) + "deg)"; passEl.style.transform = "translateX(calc(var(--pw) * " + (-.5 * (1 - p)).toFixed(3) + "))"; }
+function deckelSetze(p){ passEl.classList.toggle("deckel-hinten", p > .5); deckelEl.style.transform = "scaleX(" + Math.cos(p * Math.PI).toFixed(3) + ")"; deckelEl.style.setProperty("--falz", Math.sin(p * Math.PI).toFixed(2)); passEl.style.transform = "translateX(calc(var(--pw) * " + (-.5 * (1 - p)).toFixed(3) + "))"; }
 [passEl.querySelector(".deckel-vorne"), passEl.querySelector(".deckel-innen")].forEach(function(griff){ if(!griff) return;
   griff.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || !startAn || e.button > 0 || e.target.closest(".zuklappen")) return;
     deckelZug = { id:e.pointerId, x:e.clientX, t:performance.now(), v:0, p:null, p0:passEl.classList.contains("offen") ? 1 : 0, w:passEl.offsetWidth / 2 }; deckelGezogen = false;
@@ -1718,7 +1733,7 @@ function deckelSetze(p){ passEl.classList.toggle("deckel-hinten", p > .5); decke
     if(deckelZug.p !== null) deckelZug.v = (p - deckelZug.p) / Math.max(1, now - deckelZug.t); deckelZug.p = p; deckelZug.t = now; deckelSetze(p); });
   function los(e){ if(!deckelZug || e.pointerId !== deckelZug.id) return; const z = deckelZug; deckelZug = null; if(!deckelGezogen) return;
     const p = z.p === null ? z.p0 : z.p, auf = Math.abs(z.v) > .0015 ? z.v > 0 : p > .5;
-    passEl.classList.remove("deckel-zieht", "deckel-hinten"); deckelLos(); deckelEl.style.transform = ""; passEl.style.transform = "";
+    passEl.classList.remove("deckel-zieht", "deckel-hinten"); deckelLos(); deckelEl.style.transform = ""; deckelEl.style.removeProperty("--falz"); passEl.style.transform = "";
     if(auf) passAuf(); else passZu();
     setTimeout(function(){ deckelGezogen = false; }, 650); }
   griff.addEventListener("pointerup", los); griff.addEventListener("pointercancel", los); });
@@ -1735,11 +1750,11 @@ function blattBewegt(e){ const z = blattZug; if(!z || e.pointerId !== z.id) retu
   if(!z.zieht){ if(Math.abs(dx) < 6 && Math.abs(dy) < 6) return; if(Math.abs(dx) < 6 || Math.abs(dy) > Math.abs(dx) * 2){ if(Math.abs(dy) > 14) blattEnde(); return; }   /* schräg ist erlaubt, klar senkrecht bricht ab */ z.zieht = true; passEl.classList.add("blatt-zieht"); }
   e.preventDefault(); const now = performance.now(), p = Math.max(0, Math.min(1, z.p0 - dx / (z.w * 1.1)));
   if(z.p !== null) z.v = (p - z.p) / Math.max(1, now - z.t); z.p = p; z.t = now;
-  passEl.classList.toggle("blatt-hinten", p > .5); blattEl.style.transform = "translateZ(" + (1 + p).toFixed(2) + "px) rotateY(" + (-180 * p).toFixed(1) + "deg)"; }
+  passEl.classList.toggle("blatt-hinten", p > .5); blattEl.style.transform = "scaleX(" + Math.cos(p * Math.PI).toFixed(3) + ")"; blattEl.style.setProperty("--falz", Math.sin(p * Math.PI).toFixed(2)); }
 function blattEnde(){ removeEventListener("pointermove", blattBewegt); removeEventListener("pointerup", blattLos); removeEventListener("pointercancel", blattLos); blattZug = null; }
 function blattLos(e){ const z = blattZug; if(!z || e.pointerId !== z.id) return; blattEnde(); if(!z.zieht) return;
   const p = z.p === null ? z.p0 : z.p, an = Math.abs(z.v) > .0015 ? z.v > 0 : p > .5;
-  passEl.classList.remove("blatt-zieht", "blatt-hinten"); blattEl.style.transform = ""; blaettern(an);
+  passEl.classList.remove("blatt-zieht", "blatt-hinten"); blattEl.style.transform = ""; blattEl.style.removeProperty("--falz"); blaettern(an);
   klickSchlucken = true; setTimeout(function(){ klickSchlucken = false; }, 400); }
 if(blattEl) [passEl.querySelector(".visaseite"), passEl.querySelector(".blatt-rueck"), passEl.querySelector(".seite-fuenf")].forEach(function(seite){ if(!seite) return;
   seite.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || !startAn || e.button > 0 || blattZug) return;
