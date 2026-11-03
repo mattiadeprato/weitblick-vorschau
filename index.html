@@ -779,7 +779,7 @@ body{font-family:var(--text)}
 .pass.offen{transform:none}
 .pass.ruck{animation:ruck .35s ease}
 @keyframes ruck{30%{translate:0 4px}60%{translate:0 -1px}}
-.visaseite,.datenseite{background:#F1E8D4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Cg fill='none' stroke='%231E4D3E' stroke-opacity='.07' stroke-width='1'%3E%3Cpath d='M0 24 Q20 6 40 24 T80 24 T120 24 T160 24'/%3E%3Cpath d='M0 30 Q20 12 40 30 T80 30 T120 30 T160 30'/%3E%3Cpath d='M0 18 Q20 0 40 18 T80 18 T120 18 T160 18'/%3E%3Cpath d='M0 36 Q20 18 40 36 T80 36 T120 36 T160 36' stroke='%237A1F2E' stroke-opacity='.05'/%3E%3C/g%3E%3C/svg%3E");color:#1F2A26;display:flex;flex-direction:column;padding:calc(var(--pw) * .07) calc(var(--pw) * .08)}
+.visaseite,.datenseite,.blattseite{background:#F1E8D4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Cg fill='none' stroke='%231E4D3E' stroke-opacity='.07' stroke-width='1'%3E%3Cpath d='M0 24 Q20 6 40 24 T80 24 T120 24 T160 24'/%3E%3Cpath d='M0 30 Q20 12 40 30 T80 30 T120 30 T160 30'/%3E%3Cpath d='M0 18 Q20 0 40 18 T80 18 T120 18 T160 18'/%3E%3Cpath d='M0 36 Q20 18 40 36 T80 36 T120 36 T160 36' stroke='%237A1F2E' stroke-opacity='.05'/%3E%3C/g%3E%3C/svg%3E");color:#1F2A26;display:flex;flex-direction:column;padding:calc(var(--pw) * .07) calc(var(--pw) * .08)}
 .visaseite{position:absolute;left:50%;top:0;width:50%;height:100%;border-radius:2px 10px 10px 2px;box-shadow:0 30px 60px rgba(0,0,0,.35),inset 14px 0 18px -10px rgba(60,40,10,.3)}
 .seiten-kopf{display:flex;justify-content:space-between;margin:0;font:500 calc(var(--pw) * .028) var(--mono);color:#7A6A4A;letter-spacing:.04em}
 .seiten-fuss{margin:0;font:italic 600 calc(var(--pw) * .03) var(--text);color:#7A1F2E;text-align:center}
@@ -800,9 +800,9 @@ body{font-family:var(--text)}
 .st-fragen{--tinte:#8A5A12;--r:9deg;left:60%;top:38%;width:35%}
 .st-vormerken{--tinte:#2E5E58;--r:-5deg;left:20%;top:72%;width:56%}
 
-.deckel{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:0 50%;transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.6,0,.2,1)}
-.pass:not(.offen):hover .deckel{transform:rotateY(-16deg)}
-.pass.offen .deckel{transform:rotateY(-180deg)}
+.deckel{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:0 50%;transform-style:preserve-3d;transform:translateZ(3px) rotateY(0deg);transition:transform 1.15s cubic-bezier(.6,0,.2,1)}
+.pass:not(.offen):hover .deckel{transform:translateZ(3px) rotateY(-16deg)}
+.pass.offen .deckel{transform:translateZ(0px) rotateY(-180deg)}
 .deckel-vorne,.deckel-innen{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .deckel-vorne{display:grid;grid-template-rows:auto 1fr auto auto;justify-items:center;align-items:center;gap:6px;padding:calc(var(--pw) * .1) calc(var(--pw) * .08) calc(var(--pw) * .08);border:0;border-radius:3px 12px 12px 3px;cursor:pointer;color:#D9B86A;font-family:var(--wide);
   background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.08),rgba(255,255,255,0) 50%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)'/%3E%3C/svg%3E"),linear-gradient(135deg,#8A2434,#5E1522);box-shadow:0 34px 70px rgba(0,0,0,.45),inset 10px 0 18px -8px rgba(0,0,0,.45),inset 0 0 0 1px rgba(0,0,0,.25)}
@@ -958,6 +958,47 @@ body{font-family:var(--text)}
 .zuklappen::before{content:"";position:absolute;inset:-14px -10px}
 @media (prefers-reduced-motion:reduce){.pass.deckel-los,.pass.deckel-los .deckel{transition:none}}
 
+/* Fassung 22: Weiterblättern zu „Wer schon da war“ und einer Muster-Geschichte */
+.blatt{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:0 50%;transform-style:preserve-3d;transform:translateZ(1px) rotateY(0deg);transition:transform .95s cubic-bezier(.6,0,.2,1)}
+.pass.blaettert .blatt{transform:translateZ(2px) rotateY(-180deg)}
+.pass.blatt-zieht .blatt{transition:none}
+.pass.blatt-los .blatt{transition-duration:.55s;transition-timing-function:cubic-bezier(.2,.8,.2,1)}
+.blatt .visaseite{left:0;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.blatt-rueck{position:absolute;inset:0;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px 2px 2px 10px;box-shadow:0 30px 60px rgba(0,0,0,.35),inset -14px 0 18px -10px rgba(60,40,10,.3);gap:calc(var(--pw) * .03)}
+.seite-fuenf{position:absolute;left:50%;top:0;width:50%;height:100%;border-radius:2px 10px 10px 2px;box-shadow:0 30px 60px rgba(0,0,0,.35),inset 14px 0 18px -10px rgba(60,40,10,.3);overflow:hidden;gap:calc(var(--pw) * .035)}
+.blatt-marke{margin:calc(var(--pw) * .04) 0 0;justify-self:start;align-self:flex-start;padding:2px 8px;border:1.5px solid #5B3A7A;border-radius:3px;font:600 calc(var(--pw) * .024) var(--mono);color:#5B3A7A;letter-spacing:.04em;transform:rotate(-2deg)}
+.blatt-titel{margin:0;font:800 calc(var(--pw) * .07)/1.02 var(--wide);font-variation-settings:"wdth" 110;letter-spacing:-.02em;color:#1F2A26}
+.blatt-text{margin:0;font-size:calc(var(--pw) * .033);line-height:1.42;color:#3F443D}
+.blatt-klein{margin-top:auto;margin-bottom:calc(var(--pw) * .12);font-size:calc(var(--pw) * .029);color:#7A6A4A}
+.geschichte-kopf{display:grid;grid-template-columns:34% minmax(0,1fr);gap:6%;align-items:center;margin-top:calc(var(--pw) * .02)}
+.geschichte-stempel{width:100%;height:auto;color:#5B3A7A;opacity:.85;transform:rotate(-7deg);mix-blend-mode:multiply}
+.geschichte-daten{margin:0;display:grid;gap:calc(var(--pw) * .016)}
+.geschichte-daten dt{font:500 calc(var(--pw) * .022) var(--mono);color:#7A6A4A;letter-spacing:.03em}
+.geschichte-daten dd{margin:0;font:700 calc(var(--pw) * .032)/1.15 var(--text);color:#8C8576}
+.geschichte-text{display:grid;gap:calc(var(--pw) * .022)}
+.geschichte-text p{margin:0;font-size:calc(var(--pw) * .03);line-height:1.38;color:#8C8576}
+.geschichte-text b{display:block;font:700 calc(var(--pw) * .032) var(--text);color:#1F2A26}
+.muster-marke{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%) rotate(-18deg);padding:.05em .35em;border:calc(var(--pw) * .008) solid #7A1F2E;border-radius:6px;font:900 calc(var(--pw) * .13) var(--wide);letter-spacing:.06em;text-transform:uppercase;color:#7A1F2E;opacity:.28;mix-blend-mode:multiply;pointer-events:none}
+.seite-fuenf .seiten-fuss{margin-top:auto}
+.eselsohr{position:absolute;bottom:0;width:calc(var(--pw) * .15);height:calc(var(--pw) * .15);padding:0;border:0;cursor:grab;touch-action:pan-y;transition:transform .25s cubic-bezier(.2,1.4,.4,1)}
+.eselsohr.weiter{right:0;border-radius:0 0 10px 0;background:linear-gradient(135deg,rgba(0,0,0,0) 50%,#E4D6B6 50%,#FBF5E6 82%);box-shadow:-3px -3px 8px -4px rgba(60,40,10,.35);transform-origin:100% 100%}
+.eselsohr.zurueck{left:0;border-radius:0 0 0 10px;background:linear-gradient(225deg,rgba(0,0,0,0) 50%,#E4D6B6 50%,#FBF5E6 82%);box-shadow:3px -3px 8px -4px rgba(60,40,10,.35);transform-origin:0 100%}
+.eselsohr:hover,.eselsohr:focus-visible{transform:scale(1.18);outline:none}
+.eselsohr span{position:absolute;bottom:105%;white-space:nowrap;font:600 calc(var(--pw) * .024) var(--mono);color:#7A1F2E;letter-spacing:.03em;pointer-events:none}
+.eselsohr.weiter span{right:10%}
+.eselsohr.zurueck span{left:10%}
+.pass.blatt-zieht .eselsohr{cursor:grabbing}
+.pass.deckel-los .seite-fuenf,.pass:not(.offen) .blatt{pointer-events:none}
+@media (max-width:1023px),(max-height:559px){
+  .blatt{display:contents}
+  .eselsohr{display:none}
+  .blatt-klein{margin-bottom:0}
+  .blatt-rueck,.seite-fuenf{display:none;position:relative;left:auto;inset:auto;width:100%;height:auto;min-height:calc(var(--pw) * 1.1);transform:none;border-radius:10px;backface-visibility:visible;-webkit-backface-visibility:visible}
+  .pass.offen .blatt-rueck{display:flex;order:3}
+  .pass.offen .seite-fuenf{display:flex;order:4}
+}
+@media (prefers-reduced-motion:reduce){.blatt,.eselsohr{transition:none}}
+
 /* Seiten von rechts */
 .schleier{position:fixed;inset:0;z-index:40;background:rgba(4,4,10,.55);opacity:0;transition:opacity .45s ease}
 .schleier.an{opacity:1}
@@ -1025,6 +1066,26 @@ body{font-family:var(--text)}
     <div class="werkzeug" id="werkzeug" aria-hidden="true"><span class="w-griff"></span><span class="w-hals"></span><span class="w-fuss"></span></div>
     <div class="pass-halter" id="pass-halter">
       <div class="pass" id="pass">
+        <div class="seite-fuenf blattseite" role="group" aria-label="Seite 5: Muster einer Geschichte">
+          <p class="seiten-kopf"><span>Stimmen · Voices</span><span>5</span></p>
+          <div class="geschichte-kopf">
+            <svg class="geschichte-stempel" viewBox="0 0 180 180" aria-hidden="true"><g filter="url(#tinte)"><circle cx="90" cy="90" r="84" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="90" cy="90" r="72" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/><text x="90" y="62" class="st-klein">STADT · LAND</text><text x="90" y="98" class="st-gross">EINREISE</text><text x="90" y="124" class="st-klein">Monat · Jahr</text></g></svg>
+            <dl class="geschichte-daten">
+              <div><dt>Wer</dt><dd>Vorname, Alter</dd></div>
+              <div><dt>Wo</dt><dd>Stadt, Land</dd></div>
+              <div><dt>Wie lange</dt><dd>z. B. 4 Monate</dd></div>
+              <div><dt>Wovon gelebt</dt><dd>z. B. Remote-Job</dd></div>
+            </dl>
+          </div>
+          <div class="geschichte-text">
+            <p><b>Das war super</b>Ein, zwei Sätze dazu, was richtig gut war.</p>
+            <p><b>Das war schwierig</b>Ein, zwei Sätze dazu, was nicht geklappt oder genervt hat.</p>
+            <p><b>Mein Tipp</b>Ein Satz für alle, die es auch vorhaben.</p>
+          </div>
+          <span class="muster-marke" aria-hidden="true">Muster</span>
+          <p class="seiten-fuss">Muster: So wird eine Geschichte aussehen. Noch keine echte.</p>
+        </div>
+        <div class="blatt" id="blatt">
         <div class="visaseite">
           <p class="seiten-kopf"><span>Visa · Visas</span><span>3</span></p>
           <div class="stempel-feld">
@@ -1035,6 +1096,17 @@ body{font-family:var(--text)}
             <button class="stempel st-vormerken" data-ziel="vormerken" type="button" aria-label="Stempel Vormerken"><svg viewBox="0 0 260 120" aria-hidden="true"><g filter="url(#tinte)"><rect x="5" y="5" width="250" height="110" rx="22" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="14 7"/><text x="130" y="56" class="st-gross">VORMERKEN</text><text x="130" y="80" class="st-mittel">kostenlos · unverbindlich</text><text x="130" y="100" class="st-klein">02 · 11 · 2026</text></g></svg></button>
           </div>
           <p class="seiten-fuss">Klick auf einen Stempel oder nimm den Holzstempel und stempel selbst.</p>
+          <button class="eselsohr weiter" type="button" aria-label="Weiterblättern zu den Geschichten"><span>weiterblättern ↷</span></button>
+        </div>
+        <div class="blatt-rueck blattseite" role="group" aria-label="Seite 4: Wer schon da war">
+          <p class="seiten-kopf"><span>Stimmen · Voices</span><button class="zuklappen" type="button" aria-label="Reisepass zuklappen">zuklappen ↶</button><span>4</span></p>
+          <p class="blatt-marke">Wer schon da war</p>
+          <h3 class="blatt-titel">Geschichten aus Südostasien.</h3>
+          <p class="blatt-text">Hier erzählen Leute, die schon dort waren: wo, wie lange, wovon sie gelebt haben, was super war und was schwierig. Jede Geschichte bekommt ihren eigenen Stempel.</p>
+          <p class="blatt-text">Die erste echte Geschichte kommt bald. Auf der nächsten Seite siehst du, wie sie aussehen wird.</p>
+          <p class="blatt-text blatt-klein">Du warst schon länger in Südostasien und magst erzählen? <a class="textlink" href="#kontakt" style="min-height:0">Schreib uns</a>.</p>
+          <button class="eselsohr zurueck" type="button" aria-label="Zurückblättern zu den Visa-Stempeln"><span>↶ zurückblättern</span></button>
+        </div>
         </div>
         <div class="deckel" id="deckel">
           <button class="deckel-vorne" type="button" aria-label="Reisepass aufschlagen">
@@ -1066,7 +1138,7 @@ body{font-family:var(--text)}
     </div>
   </div>
   <footer class="start-fuss">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 21 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 22 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </section>
 
@@ -1143,7 +1215,7 @@ body{font-family:var(--text)}
   </div>
 
   <footer class="wrap leiste">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 21 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 22 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </div>
 
@@ -1581,15 +1653,15 @@ function passAuf(){ if(passEl.classList.contains("offen")) return; passEl.classL
 const anhStart = anhText ? anhText.textContent : "";
 let losTimer = 0;
 function deckelLos(){ passEl.classList.add("deckel-los"); clearTimeout(losTimer); losTimer = setTimeout(function(){ passEl.classList.remove("deckel-los"); }, 650); }
-function passZu(){ if(!passEl.classList.contains("offen")) return; deckelLos(); passEl.classList.remove("offen"); if(anhText) anhText.textContent = anhStart; }
+function passZu(){ if(!passEl.classList.contains("offen")) return; deckelLos(); passEl.classList.remove("offen", "blaettert"); if(anhText) anhText.textContent = anhStart; }
 const deckelEl = passEl.querySelector(".deckel"); let deckelZug = null, deckelGezogen = false;
 passEl.querySelector(".deckel-vorne").addEventListener("click", function(){ if(deckelGezogen){ deckelGezogen = false; return; } passAuf(); });
-const zuKnopf = passEl.querySelector(".zuklappen");
-if(zuKnopf) zuKnopf.addEventListener("click", function(e){ e.stopPropagation(); passZu(); const v = passEl.querySelector(".deckel-vorne"); if(v) setTimeout(function(){ v.focus({ preventScroll:true }); }, 50); });
-function deckelSetze(p){ deckelEl.style.transform = "rotateY(" + (-180 * p).toFixed(1) + "deg)"; passEl.style.transform = "translateX(calc(var(--pw) * " + (-.5 * (1 - p)).toFixed(3) + "))"; }
+passEl.querySelectorAll(".zuklappen").forEach(function(zuKnopf){ zuKnopf.addEventListener("click", function(e){ e.stopPropagation(); passZu(); const v = passEl.querySelector(".deckel-vorne"); if(v) setTimeout(function(){ v.focus({ preventScroll:true }); }, 50); }); });
+function deckelSetze(p){ deckelEl.style.transform = "translateZ(" + (3 * (1 - p)).toFixed(2) + "px) rotateY(" + (-180 * p).toFixed(1) + "deg)"; passEl.style.transform = "translateX(calc(var(--pw) * " + (-.5 * (1 - p)).toFixed(3) + "))"; }
 [passEl.querySelector(".deckel-vorne"), passEl.querySelector(".deckel-innen")].forEach(function(griff){ if(!griff) return;
   griff.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || !startAn || e.button > 0 || e.target.closest(".zuklappen")) return;
-    deckelZug = { id:e.pointerId, x:e.clientX, t:performance.now(), v:0, p:null, p0:passEl.classList.contains("offen") ? 1 : 0, w:passEl.offsetWidth / 2 }; deckelGezogen = false; });
+    deckelZug = { id:e.pointerId, x:e.clientX, t:performance.now(), v:0, p:null, p0:passEl.classList.contains("offen") ? 1 : 0, w:passEl.offsetWidth / 2 }; deckelGezogen = false;
+    try{ griff.setPointerCapture(e.pointerId); }catch(x){} });
   griff.addEventListener("pointermove", function(e){ if(!deckelZug || e.pointerId !== deckelZug.id) return; const dx = e.clientX - deckelZug.x;
     if(!deckelGezogen){ if(Math.abs(dx) < 6) return; deckelGezogen = true; try{ griff.setPointerCapture(e.pointerId); }catch(x){} passEl.classList.add("deckel-zieht"); }
     const now = performance.now(), p = Math.max(0, Math.min(1, deckelZug.p0 - dx / (deckelZug.w * 1.6)));
@@ -1600,6 +1672,25 @@ function deckelSetze(p){ deckelEl.style.transform = "rotateY(" + (-180 * p).toFi
     if(auf) passAuf(); else passZu();
     setTimeout(function(){ deckelGezogen = false; }, 650); }
   griff.addEventListener("pointerup", los); griff.addEventListener("pointercancel", los); });
+/* Weiterblättern: Die Visa-Seite ist ein Blatt. Eselsohr unten rechts klicken oder nach links ziehen, auf Seite 4 zurück. */
+const blattEl = document.getElementById("blatt"); let blattZug = null, blattGezogen = false, blattTimer = 0;
+function blaettern(an){ passEl.classList.add("blatt-los"); clearTimeout(blattTimer); blattTimer = setTimeout(function(){ passEl.classList.remove("blatt-los"); }, 650);
+  passEl.classList.toggle("blaettert", an);
+  const ziel = passEl.querySelector(an ? ".eselsohr.zurueck" : ".eselsohr.weiter"); if(ziel && document.activeElement && document.activeElement.closest && document.activeElement.closest(".eselsohr")) setTimeout(function(){ ziel.focus({ preventScroll:true }); }, 300); }
+if(blattEl) passEl.querySelectorAll(".eselsohr").forEach(function(ohr){
+  ohr.addEventListener("click", function(e){ e.stopPropagation(); if(blattGezogen){ blattGezogen = false; return; } blaettern(!passEl.classList.contains("blaettert")); });
+  ohr.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || e.button > 0) return; e.stopPropagation();
+    blattZug = { id:e.pointerId, x:e.clientX, t:performance.now(), v:0, p:null, p0:passEl.classList.contains("blaettert") ? 1 : 0, w:passEl.offsetWidth / 2 }; blattGezogen = false;
+    try{ ohr.setPointerCapture(e.pointerId); }catch(x){} });
+  ohr.addEventListener("pointermove", function(e){ if(!blattZug || e.pointerId !== blattZug.id) return; const dx = e.clientX - blattZug.x;
+    if(!blattGezogen){ if(Math.abs(dx) < 6) return; blattGezogen = true; try{ ohr.setPointerCapture(e.pointerId); }catch(x){} passEl.classList.add("blatt-zieht"); }
+    const now = performance.now(), p = Math.max(0, Math.min(1, blattZug.p0 - dx / (blattZug.w * 1.6)));
+    if(blattZug.p !== null) blattZug.v = (p - blattZug.p) / Math.max(1, now - blattZug.t); blattZug.p = p; blattZug.t = now;
+    blattEl.style.transform = "translateZ(" + (1 + p).toFixed(2) + "px) rotateY(" + (-180 * p).toFixed(1) + "deg)"; });
+  function blattLos(e){ if(!blattZug || e.pointerId !== blattZug.id) return; const z = blattZug; blattZug = null; if(!blattGezogen) return;
+    const p = z.p === null ? z.p0 : z.p, an = Math.abs(z.v) > .0015 ? z.v > 0 : p > .5;
+    passEl.classList.remove("blatt-zieht"); blattEl.style.transform = ""; blaettern(an); setTimeout(function(){ blattGezogen = false; }, 650); }
+  ohr.addEventListener("pointerup", blattLos); ohr.addEventListener("pointercancel", blattLos); });
 function stempeln(id, el, ohneFlug){ if(stempelt || !startAn) return; stempelt = true;
   const r = el.getBoundingClientRect(), sx = r.left + r.width / 2, sy = r.top + r.height / 2, schmal = stapel.matches;
   if(!ohneFlug && !ruhig && !schmal && werkzeug && werkzeug.animate){ const w = werkzeug.getBoundingClientRect(), dx = sx - (w.left + w.width / 2), dy = sy - (w.top + w.height * .9);
@@ -1622,7 +1713,7 @@ document.querySelectorAll(".stempel").forEach(function(b){ b.addEventListener("c
     const els = document.elementsFromPoint(p[0], p[1]);
     for(let i = 0; i < els.length; i++){ const el = els[i]; if(werkzeug.contains(el) || !el.closest) continue;
       const s = el.closest(".stempel"); if(s) return { stempel:s, p:p };
-      const seite = el.closest(".visaseite, .datenseite"); if(seite && passEl.classList.contains("offen")) return { seite:seite, p:p };
+      const seite = el.closest(".visaseite, .datenseite, .blattseite"); if(seite && passEl.classList.contains("offen")) return { seite:seite, p:p };
       if(el.closest(".deckel-vorne")) return { deckel:true, p:p }; }
     return { p:p }; }
   function zurueck(){ werkzeug.classList.remove("zieht"); werkzeug.classList.add("zurueck"); werkzeug.style.transform = ""; setTimeout(function(){ werkzeug.classList.remove("zurueck"); }, 650); }
