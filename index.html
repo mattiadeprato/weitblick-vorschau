@@ -1153,7 +1153,7 @@ html.hand-an,html.hand-an *{cursor:none!important}
     </div>
   </div>
   <footer class="start-fuss">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 26 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 27 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </section>
 
@@ -1230,7 +1230,7 @@ html.hand-an,html.hand-an *{cursor:none!important}
   </div>
 
   <footer class="wrap leiste">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 26 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 27 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </div>
 
@@ -2462,8 +2462,17 @@ setzeDauer(90, false);
   const darf = matchMedia("(min-width:1024px) and (min-height:560px) and (pointer:fine)"), PUNKT = {"offen": [150.9, 108.1], "zeigen": [170.3, 106.5], "greifen": [94.0, 240.4]};
   let x = -999, y = -999, pose = "offen", sichtbar = false, gedrueckt = false, rf = 0;
   const aktiv = function(){ return darf.matches && startAn && !offen && !startEl.hidden && !document.body.classList.contains("panel-offen"); };
-  function setze(){ rf = 0; const p = PUNKT[pose], w = Math.max(-26, Math.min(26, Math.atan2(x - innerWidth / 2, innerHeight * 1.4 - y) * 180 / Math.PI));
-    el.style.transformOrigin = p[0] + "px " + p[1] + "px"; el.style.transform = "translate(" + (x - p[0]).toFixed(1) + "px," + (y - p[1]).toFixed(1) + "px) rotate(" + w.toFixed(1) + "deg)"; }
+  /* Beim Ziehen hält die Hand die Außenkante von Deckel bzw. Blatt (aus der echten, gedrehten Lage), auf Höhe der Maus */
+  let hx = null, hy = null;
+  function anker(){ const teil = passEl.classList.contains("deckel-zieht") ? passEl.querySelector(".deckel") : passEl.classList.contains("blatt-zieht") ? document.getElementById("blatt") : null;
+    if(!teil) return null; const r = teil.getBoundingClientRect(), pr = passEl.getBoundingClientRect(), mitte = pr.left + pr.width / 2;
+    const rechts = (r.right - mitte) >= (mitte - r.left), kante = rechts ? r.right - 7 : r.left + 7;
+    return [kante, Math.max(r.top + 46, Math.min(r.bottom - 46, y))]; }
+  function setze(){ rf = 0; const a = anker(), tx = a ? a[0] : x, ty = a ? a[1] : y;
+    if(hx === null || Math.hypot(tx - hx, ty - hy) < 60){ hx = tx; hy = ty; }
+    else { hx += (tx - hx) * .42; hy += (ty - hy) * .42; rf = requestAnimationFrame(setze); }   /* Wechsel Maus <-> Kante: hinübergleiten */
+    const p = PUNKT[pose], w = Math.max(-26, Math.min(26, Math.atan2(hx - innerWidth / 2, innerHeight * 1.4 - hy) * 180 / Math.PI));
+    el.style.transformOrigin = p[0] + "px " + p[1] + "px"; el.style.transform = "translate(" + (hx - p[0]).toFixed(1) + "px," + (hy - p[1]).toFixed(1) + "px) rotate(" + w.toFixed(1) + "deg)"; }
   function welche(t){ if(gedrueckt || passEl.classList.contains("deckel-zieht") || passEl.classList.contains("blatt-zieht") || (werkzeug && werkzeug.classList.contains("zieht"))) return "greifen";
     return t && t.closest && t.closest(".stempel, .eselsohr, .zuklappen, a, .knopf, button:not(.deckel-vorne)") ? "zeigen" : "offen"; }
   function haltung(p){ if(p !== pose){ pose = p; el.dataset.pose = p; } if(!rf) rf = requestAnimationFrame(setze); }
