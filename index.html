@@ -1001,7 +1001,7 @@ body{font-family:var(--text)}
 
 /* Fassung 23: die ganze Seite ist greifbar */
 @media (min-width:1024px) and (min-height:560px){
-  .pass.offen .blatt .visaseite,.pass.offen .blatt-rueck{cursor:grab;user-select:none;-webkit-user-select:none}
+  .pass.offen .blatt .visaseite,.pass.offen .blatt-rueck,.pass.offen.blaettert .seite-fuenf{cursor:grab;user-select:none;-webkit-user-select:none}
   .pass.blatt-zieht,.pass.blatt-zieht *{cursor:grabbing!important}
 }
 
@@ -1144,7 +1144,7 @@ body{font-family:var(--text)}
     </div>
   </div>
   <footer class="start-fuss">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 23 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 24 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </section>
 
@@ -1221,7 +1221,7 @@ body{font-family:var(--text)}
   </div>
 
   <footer class="wrap leiste">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 23 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 24 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </div>
 
@@ -1679,7 +1679,7 @@ function deckelSetze(p){ deckelEl.style.transform = "translateZ(" + (3 * (1 - p)
     setTimeout(function(){ deckelGezogen = false; }, 650); }
   griff.addEventListener("pointerup", los); griff.addEventListener("pointercancel", los); });
 /* Weiterblättern: Die Visa-Seite ist ein Blatt. Überall auf der Seite greifen und nach links ziehen blättert um,
-   auf Seite 4 nach rechts zurück. Ein Klick ohne Ziehen bleibt ein Klick (Stempel, Links, Eselsohr).
+   umgeblättert auf Seite 4 oder 5 nach rechts zurück. Ein Klick ohne Ziehen bleibt ein Klick (Stempel, Links, Eselsohr).
    Bewegungen kommen vom ganzen Fenster, damit schnelle Züge nicht verloren gehen; nach einem Zug wird der Klick geschluckt. */
 const blattEl = document.getElementById("blatt"); let blattZug = null, blattTimer = 0, klickSchlucken = false;
 function blaettern(an){ passEl.classList.add("blatt-los"); clearTimeout(blattTimer); blattTimer = setTimeout(function(){ passEl.classList.remove("blatt-los"); }, 650);
@@ -1697,10 +1697,10 @@ function blattLos(e){ const z = blattZug; if(!z || e.pointerId !== z.id) return;
   const p = z.p === null ? z.p0 : z.p, an = Math.abs(z.v) > .0015 ? z.v > 0 : p > .5;
   passEl.classList.remove("blatt-zieht"); blattEl.style.transform = ""; blaettern(an);
   klickSchlucken = true; setTimeout(function(){ klickSchlucken = false; }, 400); }
-if(blattEl) [passEl.querySelector(".visaseite"), passEl.querySelector(".blatt-rueck")].forEach(function(seite){ if(!seite) return;
+if(blattEl) [passEl.querySelector(".visaseite"), passEl.querySelector(".blatt-rueck"), passEl.querySelector(".seite-fuenf")].forEach(function(seite){ if(!seite) return;
   seite.addEventListener("pointerdown", function(e){ if(stapel.matches || stempelt || !startAn || e.button > 0 || blattZug) return;
     if(e.target.closest(".zuklappen, a, input, textarea")) return;
-    const hinten = seite.classList.contains("blatt-rueck"); if(hinten !== passEl.classList.contains("blaettert")) return;
+    const hinten = !seite.classList.contains("visaseite"); if(hinten !== passEl.classList.contains("blaettert")) return; /* umgeblättert: Seite 4 und 5 führen zurück */
     blattZug = { id:e.pointerId, x:e.clientX, y:e.clientY, t:performance.now(), v:0, p:null, p0:hinten ? 1 : 0, w:passEl.offsetWidth / 2, zieht:false };
     addEventListener("pointermove", blattBewegt, { passive:false }); addEventListener("pointerup", blattLos); addEventListener("pointercancel", blattLos); }); });
 function stempeln(id, el, ohneFlug){ if(stempelt || !startAn) return; stempelt = true;
