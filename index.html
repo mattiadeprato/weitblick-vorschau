@@ -1034,6 +1034,14 @@ html.hand-an,html.hand-an *{cursor:none!important}
 .hand[data-pose="halten"] .h-halten{display:block}
 @media (prefers-reduced-motion:reduce){.deckel-vorne,.deckel-innen,.blatt .visaseite,.blatt-rueck{transition:none!important}}
 
+/* Fassung 29: sichtbarer Rückweg von der Karte zum Pass */
+.zum-pass{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px 0 11px;border-radius:4px;background:#FBF6EA;color:#1F2A26;text-decoration:none;font:600 14.5px var(--text);box-shadow:inset 0 0 0 1px rgba(31,42,38,.2),0 6px 16px rgba(50,35,10,.1);transition:color .2s,box-shadow .2s,transform .2s}
+.zum-pass svg{width:17px;height:17px;transition:transform .25s cubic-bezier(.2,1.4,.4,1)}
+.zum-pass:hover,.zum-pass:focus-visible{color:#7A1F2E;box-shadow:inset 0 0 0 1.5px #7A1F2E,0 8px 18px rgba(50,35,10,.14)}
+.zum-pass:hover svg,.zum-pass:focus-visible svg{transform:translateX(-3px)}
+@media (max-width:560px){.zum-pass{width:40px;padding:0;justify-content:center}.zum-pass span{display:none}.buehne .kopf .wrap{gap:8px}}
+@media (prefers-reduced-motion:reduce){.zum-pass,.zum-pass svg{transition:none}}
+
 /* Seiten von rechts */
 .schleier{position:fixed;inset:0;z-index:40;background:rgba(4,4,10,.55);opacity:0;transition:opacity .45s ease}
 .schleier.an{opacity:1}
@@ -1174,13 +1182,14 @@ html.hand-an,html.hand-an *{cursor:none!important}
     </div>
   </div>
   <footer class="start-fuss">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 28 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Prototyp, Fassung 29 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </section>
 
 <div class="buehne" id="inhalt">
   <header class="kopf">
     <div class="wrap">
+      <a class="zum-pass" href="#start" aria-label="Zurück zum Pass" title="Zurück zum Pass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Zum Pass</span></a>
       <a class="marke" href="#start" aria-label="Zur Übersicht"><span data-marke>Weitblick</span><small>Prototyp</small></a>
       <nav class="nav" id="hauptmenue" aria-label="Hauptmenü">
         <a href="#beratung">Beratung</a>
@@ -1251,7 +1260,7 @@ html.hand-an,html.hand-an *{cursor:none!important}
   </div>
 
   <footer class="wrap leiste">
-    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 28 · Anbieter MTG LLC, New Mexico (USA)</span></p>
+    <p class="fusszeile"><a href="#kontakt">Kontakt</a><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a><a href="#widerruf">Widerruf</a><span>Einreiseangaben grob und ohne Gewähr, Stand 30.10.2026 · Prototyp, Fassung 29 · Anbieter MTG LLC, New Mexico (USA)</span></p>
   </footer>
 </div>
 
